@@ -1,0 +1,57 @@
+
+CC = gcc
+
+CC_FLAGS = -g -ggdb -O3 -m64 -std=c99 -Wall -fgnu89-inline -Wno-unused-function -DPALLOC -DRoF -DOA -DDAOA
+CC_CAS = -pthread
+LNK_GTHREAD = -pthread
+TCM = #-L. -ltcmalloc
+OBJECTS = lfl-RoF.o worker.o lfhash.o main_test.o debugging.o
+TEST_OBJS = 
+
+#######################ALL######################
+all: test-AOA
+
+h: test-hash-AOA
+#######################TEST######################
+
+test-AOA: ${OBJECTS} ${TEST_OBJS}
+	${CC} ${CC_FLAGS} \
+	${OBJECTS} ${TEST_OBJS} ${LNK_GTHREAD} -o $@ ${TCM}
+
+test-hash-AOA: hash ${OBJECTS} ${TEST_OBJS}
+	${CC} ${CC_FLAGS} \
+	${OBJECTS} ${TEST_OBJS} ${LNK_GTHREAD} -o $@  ${TCM}
+
+hash:
+	$(eval CC_FLAGS += -DHASH_OP)
+	
+######################OBJECTS######################
+
+trace.o: trace.c allocator.h
+	${CC} ${CC_FLAGS} ${CC_CAS} -c $*.c -o $@
+
+lfhash.o: lfhash.c lfhash.h globals.h lfl.h  	
+	${CC} ${CC_FLAGS} ${CC_CAS} -c $*.c -o $@
+
+allocator.o: allocator.c allocator.h	
+	${CC} ${CC_FLAGS} ${CC_CAS} -c $*.c -o $@
+
+lfl-RoF.o: lfl-RoF.c 
+	${CC} ${CC_FLAGS} ${CC_CAS} -c $*.c -o $@
+
+worker.o: worker.c worker.h	
+	${CC} ${CC_FLAGS} ${CC_CAS} -c $*.c -o $@
+
+debugging.o: debugging.c debugging.h
+	${CC} ${CC_FLAGS} ${CC_CAS} -c $*.c -o $@	
+
+main_test.o: main_test.c lfl.h globals.h
+	${CC} ${CC_FLAGS} ${CC_CAS} -c $*.c -o $@
+
+######################Clean######################
+
+clean:
+	rm -f  *.o
+
+real-clean: clean
+	rm -f test-RoF-IF test-hash-RoF-IF
