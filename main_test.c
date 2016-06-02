@@ -1,9 +1,9 @@
 #define DEFAULT_TIME 1
 #define DEFAULT_SEARCH_FRACTION 0.80
-#define DEFUALT_SET_SIZE 10000
+#define DEFAULT_SET_SIZE 10000
 #ifndef HASH_OP
-#undef DEFUALT_SET_SIZE
-#define DEFUALT_SET_SIZE 5000
+#undef DEFAULT_SET_SIZE
+#define DEFAULT_SET_SIZE 5000
 #endif
 #define DISPLAY_PARAMS 1
 #define MAX_THREADS 128
@@ -113,9 +113,19 @@ Input parseArgs(int argc, char *argv[], int *pNumThreads, int *ptime,
 		//printf("bad arguments, format is: %s num_threads num_ops init_list_size elem_range ins_ops [0..1] del_ops [0..1] \n", argv[0]);
 		exit(0);
 	}
+	if(strcmp(argv[1], "-h")==0 || strcmp(argv[1], "--help")==0){
+		printf("Usage: %s num_threads [set_size search_fraction time heap_size]\n", argv[0]);
+		printf("First argument is mandatory, other four are optional\n"); 
+		printf("set_size\t the average number of items in the set. Range is set_size*2. Default=%d\n", DEFAULT_SET_SIZE); 
+		printf("search_fraction\t the fraction of search operation. Defualt: %.2f\n", DEFAULT_SEARCH_FRACTION); 
+		printf("time\t\t the time in seconds. Default: %d\n", DEFAULT_TIME); 
+		printf("heap_size\t the memory available for allocations. This represents the stress on the memory manager. Default: %d\n", 
+									HEAP_SIZE); 
+		exit(0); 
+	}
 	*pNumThreads		= atoi(argv[1]);
 
-	*pInitListSize	=DEFUALT_SET_SIZE;
+	*pInitListSize	=DEFAULT_SET_SIZE;
 	if(argc>2 && atoi(argv[2])!=0)
 		*pInitListSize = atoi(argv[2]);
 	*pRange = 2*(*pInitListSize);
