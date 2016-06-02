@@ -1,7 +1,12 @@
 #define _GNU_SOURCE
-#ifndef NS
+/*#ifndef NS
 #error "must define namespace by define NS ..."
 #define NCHILDS 1
+#define CHILD1_OFFSET 0
+#endif*/
+#ifndef NS
+#define NS
+#define NCHILDS 0
 #define CHILD1_OFFSET 0
 #endif
 #include "Atomic.h"
